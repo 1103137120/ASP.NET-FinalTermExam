@@ -79,8 +79,6 @@ namespace mvc.Controllers
         }
 
 
-
-
         //[HttpGet]
         //public ActionResult Edit(int? orderId)
         //{
@@ -117,5 +115,18 @@ namespace mvc.Controllers
         //}
 
 
+
+
+
+        [HttpGet]
+        public ActionResult Delete(int? CustomerID, FormCollection col)
+        {
+           // cusService.GetOrderById(orderId);
+            if (cusService != null)
+                cusService.DeleteCustomers(CustomerID);
+            return RedirectToAction("Index");
+        }
+
     }
+
 }

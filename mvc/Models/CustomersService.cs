@@ -141,27 +141,27 @@ namespace mvc.Models
             return result;
         }
 
+        /// <summary>
+        /// 刪除客戶
+        /// </summary>
+        public void DeleteCustomers(int? CustomerID)
+        {
+            DataTable dt = new DataTable();
+            String sql = @"DELETE FROM [Sales].[Customers]
+                          WHERE [CustomerID]=@CustomerID";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@CustomerID", CustomerID));
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+        }
 
 
-        //   /// <summary>
-        //   /// 刪除訂單
-        //   /// </summary>
-        //   public void DeleteOrder(int? orderId)
-        //   {
-        //       DataTable dt = new DataTable();
-        //       String sql = @"DELETE FROM [Sales].[Orders]
-        //                  WHERE [OrderID]=@OrderId";
-
-        //       using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
-        //       {
-        //           conn.Open();
-        //           SqlCommand cmd = new SqlCommand(sql, conn);
-        //           cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
-        //           SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
-        //           sqlAdapter.Fill(dt);
-        //           conn.Close();
-        //       }
-        //   }
         //   /// <summary>
         //   /// 修改訂單
         //   /// </summary>
