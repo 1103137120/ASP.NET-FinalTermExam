@@ -89,81 +89,57 @@ namespace mvc.Models
         //}
 
 
-        //   public List<Customers> SearchOrder(Models.cus cus)
-        //   {
-        //       List<Customers> result = new List<Customers>();
-        //       DataTable dt = new DataTable();
-        //       String sqlwhere = "1=1";
-        //       if (cus.OrderId != 0)
-        //       {
-        //           sqlwhere = sqlwhere + "AND OrderID=@OrderID";
-        //       }
-        //       if (cus.CustId != 0)
-        //       {
-        //           sqlwhere = sqlwhere + " AND c.CustomerID=@CustomerID";
-        //       }
-        //       if (cus.EmpId != 0)
-        //       {
-        //           sqlwhere = sqlwhere + " AND e.EmployeeID=@EmployeeID";
-        //       }
-        //       if (cus.ShipperName != null)
-        //       {
-        //           sqlwhere = sqlwhere + " AND ShipperName=@ShipperName";
-        //       }
-        //       if (cus.OrderDate != null)
-        //       {
-        //           sqlwhere = sqlwhere + " AND OrderDate=@OrderDate";
-        //       }
-        //       if (cus.RequireDate != null)
-        //       {
-        //           sqlwhere = sqlwhere + " AND RequiredDate=@RequiredDate"; ;
-        //       }
-        //       if (cus.ShippedDate != null)
-        //       {
-        //           sqlwhere = sqlwhere + " AND ShippedDate=@ShippedDate"; ;
-        //       }
-        //       String sql = @"SELECT OrderID,c.CompanyName,LastName+' '+FirstName AS EmpName,ship.CompanyName AS ShipperName,convert(char(10),OrderDate,111) AS OrderDate,convert(char(10),OrderDate,111) AS RequiredDate,convert(char(10),ShippedDate,111) AS ShippedDate
-        //                  FROM [Sales].[Orders] AS o                           
-        //               JOIN [Sales].[Customers] AS c
-        //               ON o.CustomerID=c.CustomerID
-        //JOIN [HR].[Employees] AS e
-        //ON o.EmployeeID=e.EmployeeID
-        //JOIN [Production].[Suppliers] AS ship
-        //ON o.[ShipperID]=ship.SupplierID
-        //                  WHERE " + sqlwhere;
+        public List<Customers> SearchCustomers(Models.Customers cus)
+        {
+            List<Customers> result = new List<Customers>();
+            DataTable dt = new DataTable();
+            String sqlwhere = "1=1";
+            if (cus.CustomerID != 0)
+            {
+                sqlwhere = sqlwhere + "AND CustomerID=@CustomerID";
+            }
+            if (cus.CompanyName != null)
+            {
+                sqlwhere = sqlwhere + "AND CompanyName=@CompanyName";
+            }
+            if (cus.ContactName != null)
+            {
+                sqlwhere = sqlwhere + " AND ContactName=@ContactName";
+            }
+            if (cus.ContactTitle != null)
+            {
+                sqlwhere = sqlwhere + " AND ContactTitle=@ContactTitle";
+            }
+            
+            String sql = @"SELECT CustomerID,CompanyName,ContactName,ContactTitle
+                          FROM [Sales].[Customers] 
+                          WHERE " + sqlwhere;
 
-        //       using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
-        //       {
-        //           conn.Open();
-        //           SqlCommand cmd = new SqlCommand(sql, conn);
-        //           if (cus.OrderId != 0) { cmd.Parameters.Add(new SqlParameter("@OrderID", cus.OrderId)); }
-        //           if (cus.CustId != 0) { cmd.Parameters.Add(new SqlParameter("@CustomerID", cus.CustId)); }
-        //           if (cus.EmpId != 0) { cmd.Parameters.Add(new SqlParameter("@EmployeeID", cus.EmpId)); }
-        //           if (cus.ShipperName != null) { cmd.Parameters.Add(new SqlParameter("@ShipperName", cus.ShipperName)); }
-        //           if (cus.OrderDate != null) { cmd.Parameters.Add(new SqlParameter("@OrderDate", cus.OrderDate)); }
-        //           if (cus.RequireDate != null) { cmd.Parameters.Add(new SqlParameter("@RequiredDate", cus.RequireDate)); }
-        //           if (cus.ShippedDate != null) { cmd.Parameters.Add(new SqlParameter("@ShippedDate", cus.ShippedDate)); }
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                if (cus.CustomerID != 0) { cmd.Parameters.Add(new SqlParameter("@CustomerID", cus.CustomerID)); }
+                if (cus.CompanyName != null) { cmd.Parameters.Add(new SqlParameter("@CompanyName", cus.CompanyName)); }
+                if (cus.ContactName != null) { cmd.Parameters.Add(new SqlParameter("@ContactName", cus.ContactName)); }
+                if (cus.ContactTitle != null) { cmd.Parameters.Add(new SqlParameter("@ContactTitle", cus.ContactTitle)); }
 
-        //           SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
-        //           sqlAdapter.Fill(dt);
-        //           conn.Close();
-        //       }
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
 
-        //       result = (from i in dt.AsEnumerable()
-        //                 select new cus()
-        //                 {
-        //                     OrderId = i.Field<int>("OrderID"),
-        //                     CompanyName = i.Field<string>("CompanyName"),
-        //                     EmpName = i.Field<string>("EmpName"),
-        //                     ShipperName = i.Field<string>("ShipperName"),
-        //                     OrderDate = i.Field<string>("OrderDate"),
-        //                     RequireDate = i.Field<string>("RequiredDate"),
-        //                     ShippedDate = i.Field<string>("ShippedDate")
+            result = (from i in dt.AsEnumerable()
+                      select new Customers()
+                      {
+                          CustomerID = i.Field<int>("CustomerID"),
+                          CompanyName = i.Field<string>("CompanyName"),
+                          ContactName = i.Field<string>("ContactName"),
+                          ContactTitle = i.Field<string>("ContactTitle"),                         
+                      }).ToList<Customers>();
 
-        //                 }).ToList<cus>();
-
-        //       return result;
-        //   }
+            return result;
+        }
 
 
 
