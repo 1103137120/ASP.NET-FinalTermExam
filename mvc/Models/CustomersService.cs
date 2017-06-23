@@ -251,47 +251,39 @@ namespace mvc.Models
         //       return result;
         //   }
 
-        //   /// <summary>
-        //   /// 取得訂單列表
-        //   /// </summary>
-        //   /// <returns></returns>
-        //   public List<cus> GetOrders()
-        //   {
-        //       List<cus> result = new List<cus>();
-        //       DataTable dt = new DataTable();
-        //       String sql = @"SELECT OrderID,c.CompanyName,LastName+' '+FirstName AS EmpName,ship.CompanyName AS ShipperName,convert(char(10),OrderDate,111) AS OrderDate,convert(char(10),OrderDate,111) AS RequiredDate,convert(char(10),ShippedDate,111) AS ShippedDate
-        //                  FROM [Sales].[Orders] AS o                           
-        //               JOIN [Sales].[Customers] AS c
-        //               ON o.CustomerID=c.CustomerID
-        //JOIN [HR].[Employees] AS e
-        //ON o.EmployeeID=e.EmployeeID
-        //JOIN [Production].[Suppliers] AS ship
-        //ON o.[ShipperID]=ship.SupplierID";
+        /// <summary>
+        /// 取得客戶列表
+        /// </summary>
+        /// <returns></returns>
+        public List<Customers> GetCustomers()
+        {
+            List<Customers> result = new List<Customers>();
+            DataTable dt = new DataTable();
+            String sql = @"SELECT CustomerID,CompanyName,ContactName,ContactTitle
+                          FROM [Sales].[Customers] ";
 
-        //       using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
-        //       {
-        //           conn.Open();
-        //           SqlCommand cmd = new SqlCommand(sql, conn);
-        //           SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
-        //           sqlAdapter.Fill(dt);
-        //           conn.Close();
-        //       }
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
 
-        //       result = (from i in dt.AsEnumerable()
-        //                 select new cus()
-        //                 {
-        //                     OrderId = i.Field<int>("OrderID"),
-        //                     CompanyName = i.Field<string>("CompanyName"),
-        //                     EmpName = i.Field<string>("EmpName"),
-        //                     ShipperName = i.Field<string>("ShipperName"),
-        //                     OrderDate = i.Field<string>("OrderDate"),
-        //                     RequireDate = i.Field<string>("RequiredDate"),
-        //                     ShippedDate = i.Field<string>("ShippedDate")
+            result = (from i in dt.AsEnumerable()
+                      select new Customers()
+                      {
+                          CustomerID = i.Field<int>("CustomerID"),
+                          CompanyName = i.Field<string>("CompanyName"),
+                          ContactName = i.Field<string>("ContactName"),
+                          ContactTitle = i.Field<string>("ContactTitle"),
 
-        //                 }).ToList<cus>();
 
-        //       return result;
-        //   }
+                      }).ToList<Customers>();
+
+            return result;
+        }
         //   
         //   /// <summary>
         //   /// 取得員工下拉式選單資料

@@ -75,7 +75,10 @@ namespace mvc.Controllers
         [HttpPost]
         public ActionResult Search(Customers c)
         {
-            return View("SearchResult", cusService.SearchCustomers(c));
+            if (c == null) {
+                return View("SearchResult", cusService.GetCustomers());
+            }else { return View("SearchResult", cusService.SearchCustomers(c)); }
+           
         }
 
 
